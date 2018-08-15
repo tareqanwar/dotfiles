@@ -1,12 +1,9 @@
 echo "apt update..."
-sudo apt -qq update
+sudo apt -y update
 echo "✔ update done!"
 
-sudo apt -qq install curl zsh git
-echo "✔ base packeges are installed"
-
-git pull origin master
-echo "dotfiles are uptodate"
+sudo apt -y install curl zsh git
+echo "✔ to make sure base packeges are installed"
 
 ln -sf $(pwd)/.dotfiles//bashrc ~/.bashrc
 echo "✔ zsh as default shell"
@@ -27,72 +24,47 @@ echo "✔ .gitconfig symlinked"
 
 mkdir -p ~/.config
 
-rm -f ~/c
-ln -sf /mnt/c ~/c
-ln -sf /mnt/c/Users/trqnw/ ~/home
-rm -f ~/projects
-ln -sf /mnt/c/Projects ~/projects
-rm -f ~/downloads
-ln -sf /mnt/c/Users/trqnw/Downloads ~/downloads
-rm -f ~/pictures
-ln -sf /mnt/c/Users/trqnwr/Pictures ~/pictures
-ln -sf /mnt/e/Workspace/ ~/dev
-ln -sf /mnt/e/Workspace/Personal\ Dashboard/ ~/pd
-echo "✔ alias for windows folders"
-
 sudo apt -y install nodejs
 sudo apt -y install npm
 sudo npm install -g nodemon
 echo "✔ installed nodejs, npm, nodemon"
 
-apt-get install python-software-properties
-echo "✔ installed install python-software-properties to be able to add external repo"
+sudo apt install -y software-properties-common
+echo "✔ installed install software-properties-common to be able to add external repo"
 
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-sudo apt update
-sudo apt -y install mongodb-org
+sudo apt -y install mongodb
 echo "✔ installed mongodb"
 
 echo "✔ staring lamp stack installation"
 
 sudo apt install -y apache2 apache2-utils
-systemctl status apache2
-sudo systemctl start apache2
-sudo systemctl enable apache2
-apache2 -v
-echo "✔ apache installed and enabled successfully"
+echo "✔ apache installed"
 
 sudo chown www-data:www-data /var/www/html/ -R
 echo "✔ changed owner of the html folder to www-data"
 
-sudo apt install mariadb-server mariadb-client
-systemctl status mariadb
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
-echo "✔ mariadb installed and enabled successfully. but we will install mysql setting later"
+sudo apt install -y mariadb-server mariadb-client
+echo "✔ mariadb installed. we will install mysql setting later"
 
-sudo add-apt-repository ppa:ondrej/php
+sudo apt install apt-transport-https lsb-release ca-certificates
+sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+sudo sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 sudo apt update && apt upgrade
 sudo apt install -y php7.2
 sudo apt install -y php-pear php7.2-curl php7.2-dev php7.2-gd php7.2-mbstring php7.2-zip php7.2-mysql php7.2-xml
 echo "✔ php installed"
 
 sudo a2enmod php7.2
-sudo systemctl restart apache2
-echo "✔ restarted apache"
-
-php --version
 
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 echo "✔ installed composer"
-
-cp ~/.dotfiles/.hyper.js ~/c/Users/trqnw/
-echo "✔ copied .hyper.js to home"
 
 sudo mysql_secure_installation
 mariadb --version
 echo "✔ mysql installation successful"
 
-sudo systemctl restart apache2
-echo "✔ restarted apache"
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+sudo systemctl start apache2
+sudo systemctl enable apache2
+echo "✔ started apache and mariadb"
