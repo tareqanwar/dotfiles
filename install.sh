@@ -5,7 +5,7 @@ echo "✔ update done!"
 sudo apt -y install curl zsh git
 echo "✔ to make sure base packeges are installed"
 
-ln -sf $(pwd)/.dotfiles//bashrc ~/.bashrc
+ln -sf ~/.dotfiles//bashrc ~/.bashrc
 echo "✔ zsh as default shell"
 
 # Run ZSH Automatically
