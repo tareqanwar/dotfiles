@@ -3,14 +3,14 @@
 export PATH=$PATH:$HOME/.bin
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/trqnwr/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
  
-# Alias for Docker
-alias docker='docker.exe'
-alias docker-compose='docker-compose.exe'
 
-# Alias for Choco
-alias choco='choco.exe'
+
+
+
+
+
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
