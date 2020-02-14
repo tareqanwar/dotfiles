@@ -24,14 +24,7 @@ echo "✔ .gitconfig symlinked"
 
 mkdir -p ~/.config
 
-sudo apt -y install nodejs
-sudo apt -y install npm
-sudo npm install -g nodemon
-echo "✔ installed nodejs, npm, nodemon"
-
 sudo apt install -y software-properties-common
 echo "✔ installed install software-properties-common to be able to add external repo"
 
-sudo apt -y install mongodb
-echo "✔ installed mongodb"
 
