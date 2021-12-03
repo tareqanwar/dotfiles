@@ -1,11 +1,11 @@
 # dotfiles
-My Raspberry Pi configuration files.
+Ubuntu/Debian configuration files.
 
 ### usage
 Just run `./install.sh` to install zsh (including oh-my-zsh and other important stuff) and symlink all dotfiles.
 
 ```
-$ git clone https://github.com/tareqanwar/raspberry-pi-dotfiles.git ~/.dotfiles
+$ git clone https://github.com/tareqanwar/dotfiles.git ~/.dotfiles
 $ cd ~/.dotfiles
 $ chmod +x install.sh
 $ ./install.sh
