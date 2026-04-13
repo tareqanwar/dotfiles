@@ -2,6 +2,9 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKIP_RUNTIMES=false
+SKIP_AI=false
+MINIMAL=false
 
 log() {
   printf '\033[1;32m[dotfiles]\033[0m %s\n' "$1"
@@ -195,6 +198,47 @@ set_default_shell() {
   fi
 }
 
+
+usage() {
+  cat <<USAGE
+Usage: ./install.sh [options]
+
+Options:
+  --minimal         Install only base shell + git setup
+  --skip-runtimes   Skip nvm/pyenv/sdkman/pnpm setup
+  --skip-ai         Skip Claude/Kiro CLI installs
+  -h, --help        Show this help message
+USAGE
+}
+
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --minimal)
+        MINIMAL=true
+        SKIP_RUNTIMES=true
+        SKIP_AI=true
+        ;;
+      --skip-runtimes)
+        SKIP_RUNTIMES=true
+        ;;
+      --skip-ai)
+        SKIP_AI=true
+        ;;
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      *)
+        echo "Unknown option: $1" >&2
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
 main() {
   case "$(uname -s)" in
     Darwin)
@@ -215,21 +259,28 @@ main() {
   esac
 
   install_oh_my_zsh
-  install_nvm
-  install_sdkman
 
-  if [[ "$(uname -s)" == "Linux" ]]; then
-    install_pyenv_linux
+  if [[ "$SKIP_RUNTIMES" == "false" ]]; then
+    install_nvm
+    install_sdkman
+
+    if [[ "$(uname -s)" == "Linux" ]]; then
+      install_pyenv_linux
+    fi
+
+    setup_node_toolchain
+    install_pnpm
   fi
 
-  setup_node_toolchain
-  install_pnpm
-  install_claude_cli
-  install_kiro_cli
+  if [[ "$SKIP_AI" == "false" ]]; then
+    install_claude_cli
+    install_kiro_cli
+  fi
   symlink_files
   set_default_shell
 
   log "Done. Restart terminal or run: source ~/.zshrc"
 }
 
-main "$@"
+parse_args "$@"
+main

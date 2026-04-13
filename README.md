@@ -21,6 +21,7 @@ chmod +x install.sh
 - fast zsh startup with practical defaults
 - git-aware prompt with branch, ahead/behind, and dirty flags
 - quality completion/keybindings and optional tooling hooks (`fzf`, `zoxide`, `direnv`)
+- extra QoL helpers: `croot` (jump to repo root), `fcd` (fuzzy cd), `ports` (list listening ports)
 
 ### Git workflow
 - clean defaults for modern branching (`main`, rebase pull, prune fetch)
@@ -66,3 +67,9 @@ The installer also:
 - installs nvm, sdkman, pyenv (Linux), and pnpm
 - symlinks `.zshrc`, `.bashrc`, and `.gitconfig`
 - attempts to set zsh as default shell
+
+
+## Installer flags
+- `./install.sh --minimal` → only base shell + git setup
+- `./install.sh --skip-runtimes` → skip nvm/pyenv/sdkman/pnpm
+- `./install.sh --skip-ai` → skip Claude/Kiro install

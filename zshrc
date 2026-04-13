@@ -159,6 +159,26 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 
+
+# ---------- QoL helpers ----------
+# Jump to git repo root quickly.
+croot() {
+  local root
+  root=$(git rev-parse --show-toplevel 2>/dev/null) || return
+  cd "$root"
+}
+
+# Fuzzy-cd into a directory under the current tree.
+fcd() {
+  command -v fzf >/dev/null 2>&1 || return
+  local dir
+  dir=$(find . -type d -not -path '*/\.*' 2>/dev/null | fzf) || return
+  cd "$dir"
+}
+
+# Show ports currently in LISTEN state.
+alias ports='lsof -nP -iTCP -sTCP:LISTEN'
+
 # ---------- Runtime version managers ----------
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
