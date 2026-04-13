@@ -40,6 +40,22 @@ Useful shell shortcuts are included:
 - `pn`, `pna`, `pnr`, `pni`, `pnx`
 - `upgrade-dev-runtimes` (updates nvm/pnpm/pyenv/sdkman where available)
 
+
+### AI CLI tooling
+Installer now bootstraps:
+- **Claude CLI** (`claude`) via Homebrew cask on macOS when possible, otherwise npm
+- **Kiro CLI** (`kiro`) via official install script
+
+Convenience aliases:
+- `cc` → `claude`
+- `ki` → `kiro`
+
+### Other ideas to level this up
+- Add `atuin` for shell history sync/search across machines.
+- Add `lazygit` for a fast TUI git workflow.
+- Add `mise` if you want one manager for node/python/java/tool versions.
+- Add `aider` for repo-aware AI pair programming from terminal.
+
 ## Installer behavior
 - **macOS:** uses Homebrew packages.
 - **WSL / Ubuntu / Debian family:** uses `apt` and Ubuntu-style dependencies.

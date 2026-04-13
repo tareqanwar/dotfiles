@@ -190,6 +190,11 @@ alias pnr='pnpm remove'
 alias pni='pnpm install'
 alias pnx='pnpm dlx'
 
+
+# AI coding CLIs
+alias cc='claude'
+alias ki='kiro'
+
 # One-command upgrader for the common runtime managers
 upgrade-dev-runtimes() {
   command -v nvm >/dev/null 2>&1 && nvm install --lts --reinstall-packages-from=current

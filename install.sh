@@ -118,6 +118,51 @@ install_pnpm() {
   fi
 }
 
+
+setup_node_toolchain() {
+  export NVM_DIR="$HOME/.nvm"
+  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    # shellcheck disable=SC1090
+    source "$NVM_DIR/nvm.sh"
+    nvm install --lts
+    nvm alias default lts/*
+    nvm use --lts
+  fi
+
+  if command -v corepack >/dev/null 2>&1; then
+    corepack enable
+  fi
+}
+
+install_claude_cli() {
+  if command -v claude >/dev/null 2>&1; then
+    return
+  fi
+
+  if [[ "$(uname -s)" == "Darwin" ]] && command -v brew >/dev/null 2>&1; then
+    log "Installing Claude Code CLI via Homebrew cask"
+    brew install --cask claude-code || true
+  fi
+
+  if ! command -v claude >/dev/null 2>&1; then
+    if command -v npm >/dev/null 2>&1; then
+      log "Installing Claude Code CLI via npm"
+      npm install -g @anthropic-ai/claude-code
+    else
+      log "npm not found; skipped Claude Code CLI install."
+    fi
+  fi
+}
+
+install_kiro_cli() {
+  if command -v kiro >/dev/null 2>&1 || command -v kiro-cli >/dev/null 2>&1; then
+    return
+  fi
+
+  log "Installing Kiro CLI"
+  curl -fsSL https://cli.kiro.dev/install | bash
+}
+
 symlink_files() {
   ln -sfn "$DOTFILES_DIR/zshrc" "$HOME/.zshrc"
   ln -sfn "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
@@ -159,7 +204,10 @@ main() {
     install_pyenv_linux
   fi
 
+  setup_node_toolchain
   install_pnpm
+  install_claude_cli
+  install_kiro_cli
   symlink_files
   set_default_shell
 
