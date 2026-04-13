@@ -11,14 +11,41 @@ is_wsl() {
   grep -qi microsoft /proc/version 2>/dev/null
 }
 
+linux_distro() {
+  if [[ -r /etc/os-release ]]; then
+    . /etc/os-release
+    echo "${ID:-unknown}"
+  else
+    echo "unknown"
+  fi
+}
+
+install_packages_ubuntu_like() {
+  sudo apt update
+  sudo apt install -y \
+    curl git zsh ca-certificates fzf ripgrep fd-find unzip zip \
+    build-essential software-properties-common
+}
+
 install_packages_linux() {
+  local distro
+  distro="$(linux_distro)"
+
+  if [[ "$distro" == "ubuntu" || "$distro" == "debian" || "$distro" == "pop" || "$distro" == "linuxmint" ]]; then
+    log "Using apt for ${distro}"
+    install_packages_ubuntu_like
+    return
+  fi
+
   if command -v apt >/dev/null 2>&1; then
-    sudo apt update
-    sudo apt install -y curl git zsh ca-certificates fzf ripgrep fd-find unzip
+    log "Using apt (fallback)"
+    install_packages_ubuntu_like
   elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y curl git zsh fzf ripgrep fd-find unzip
+    log "Using dnf"
+    sudo dnf install -y curl git zsh fzf ripgrep fd-find unzip zip
   elif command -v pacman >/dev/null 2>&1; then
-    sudo pacman -Sy --noconfirm curl git zsh fzf ripgrep fd unzip
+    log "Using pacman"
+    sudo pacman -Sy --noconfirm curl git zsh fzf ripgrep fd unzip zip
   else
     log "No supported package manager found; install dependencies manually."
   fi
@@ -29,7 +56,9 @@ install_packages_macos() {
     log "Homebrew not found. Install from https://brew.sh then re-run."
     return
   fi
-  brew install git zsh fzf ripgrep fd bat eza zoxide direnv git-delta
+
+  brew update
+  brew install git zsh fzf ripgrep fd bat eza zoxide direnv git-delta pyenv
 }
 
 install_oh_my_zsh() {
@@ -46,6 +75,47 @@ install_oh_my_zsh() {
 
   [[ -d "$custom/zsh-autosuggestions" ]] || \
     git clone https://github.com/zsh-users/zsh-autosuggestions "$custom/zsh-autosuggestions"
+}
+
+install_nvm() {
+  if [[ ! -d "$HOME/.nvm" ]]; then
+    log "Installing nvm"
+    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  fi
+}
+
+install_sdkman() {
+  if [[ ! -d "$HOME/.sdkman" ]]; then
+    log "Installing SDKMAN"
+    curl -fsSL https://get.sdkman.io | bash
+  fi
+}
+
+install_pyenv_linux() {
+  if command -v pyenv >/dev/null 2>&1; then
+    return
+  fi
+
+  if command -v apt >/dev/null 2>&1; then
+    sudo apt install -y make build-essential libssl-dev zlib1g-dev \
+      libbz2-dev libreadline-dev libsqlite3-dev wget llvm libncursesw5-dev \
+      xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+  fi
+
+  curl https://pyenv.run | bash
+}
+
+install_pnpm() {
+  if command -v pnpm >/dev/null 2>&1; then
+    return
+  fi
+
+  if command -v corepack >/dev/null 2>&1; then
+    corepack enable
+    corepack prepare pnpm@latest --activate
+  else
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+  fi
 }
 
 symlink_files() {
@@ -82,6 +152,14 @@ main() {
   esac
 
   install_oh_my_zsh
+  install_nvm
+  install_sdkman
+
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    install_pyenv_linux
+  fi
+
+  install_pnpm
   symlink_files
   set_default_shell
 

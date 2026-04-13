@@ -158,6 +158,46 @@ command -v fzf >/dev/null 2>&1 && eval "$(fzf --zsh)"
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
+
+# ---------- Runtime version managers ----------
+export NVM_DIR="$HOME/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+
+export PYENV_ROOT="$HOME/.pyenv"
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init - zsh)"
+fi
+
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+  source "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
+# ---------- Language/package manager shortcuts ----------
+alias nvmls='nvm ls'
+alias nvmlts='nvm install --lts'
+alias nvmuse='nvm use --lts'
+alias pyp='pyenv versions'
+alias pypl='pyenv install --list'
+alias pypsi='pyenv install'
+alias pyps='pyenv shell'
+alias jvms='sdk list java'
+alias juse='sdk use java'
+alias jins='sdk install java'
+alias pn='pnpm'
+alias pna='pnpm add'
+alias pnr='pnpm remove'
+alias pni='pnpm install'
+alias pnx='pnpm dlx'
+
+# One-command upgrader for the common runtime managers
+upgrade-dev-runtimes() {
+  command -v nvm >/dev/null 2>&1 && nvm install --lts --reinstall-packages-from=current
+  command -v pnpm >/dev/null 2>&1 && pnpm self-update || true
+  command -v pyenv >/dev/null 2>&1 && pyenv update || true
+  command -v sdk >/dev/null 2>&1 && sdk selfupdate force && sdk update || true
+}
+
 # ---------- WSL quality of life ----------
 if [[ "$PLATFORM" == "wsl" ]]; then
   alias open='explorer.exe'

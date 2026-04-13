@@ -1,16 +1,10 @@
 # dotfiles
 
-A portable **developer-first** shell setup for:
-- macOS
-- Linux
-- WSL
+A portable **developer-first** terminal setup for:
+- macOS (Homebrew)
+- WSL + Ubuntu-family distros (apt)
+- other Linux distros
 - any terminal with zsh support
-
-It ships with:
-- fast, readable zsh prompt with **git branch/status indicators**
-- practical git defaults and aliases for modern workflows
-- cross-platform install script
-- sane history, completion, and navigation defaults
 
 ## Install
 
@@ -21,26 +15,38 @@ chmod +x install.sh
 ./install.sh
 ```
 
-## What you get
+## Highlights
 
-### Zsh
-- portable path setup for Linux/macOS/Homebrew
-- strong completion + keybindings
-- optional tooling hooks (`fzf`, `zoxide`, `direnv`)
-- git-aware prompt:
-  - current branch
-  - ahead/behind marker
-  - unstaged/staged/untracked flags
+### Zsh + Prompt
+- fast zsh startup with practical defaults
+- git-aware prompt with branch, ahead/behind, and dirty flags
+- quality completion/keybindings and optional tooling hooks (`fzf`, `zoxide`, `direnv`)
 
-### Git
-- `main` as default branch for new repos
-- pull via rebase + autostash
-- auto-prune on fetch
-- conflict style `zdiff3`
-- rerere enabled for easier repeated conflict resolution
-- useful aliases (`s`, `lg`, `tree`, `br`, `up`, etc.)
+### Git workflow
+- clean defaults for modern branching (`main`, rebase pull, prune fetch)
+- useful day-to-day aliases for status, logs, and branch visibility
 
-## Notes
-- If you don’t use `nvim`, update `[core] editor` in `gitconfig`.
-- Optional tools like `delta`, `eza`, `bat`, `zoxide` are auto-used when installed.
-- For work/personal split config, use `~/.gitconfig-work` (already wired in via `includeIf`).
+### Runtime/version-manager workflow
+This setup is tuned so switching language versions is simple:
+- **Node.js:** `nvm`
+- **Package manager:** `pnpm` (installed/configured as primary npm ecosystem package manager)
+- **Python:** `pyenv`
+- **Java:** `sdkman`
+
+Useful shell shortcuts are included:
+- `nvmls`, `nvmlts`, `nvmuse`
+- `pyp`, `pypl`, `pypsi`, `pyps`
+- `jvms`, `juse`, `jins`
+- `pn`, `pna`, `pnr`, `pni`, `pnx`
+- `upgrade-dev-runtimes` (updates nvm/pnpm/pyenv/sdkman where available)
+
+## Installer behavior
+- **macOS:** uses Homebrew packages.
+- **WSL / Ubuntu / Debian family:** uses `apt` and Ubuntu-style dependencies.
+- **Other Linux distros:** falls back to detected package manager (`dnf` / `pacman` / `apt`).
+
+The installer also:
+- installs Oh My Zsh + syntax/autosuggestion plugins
+- installs nvm, sdkman, pyenv (Linux), and pnpm
+- symlinks `.zshrc`, `.bashrc`, and `.gitconfig`
+- attempts to set zsh as default shell
