@@ -43,12 +43,12 @@ Useful shell shortcuts are included:
 
 ### AI CLI tooling
 Installer now bootstraps:
-- **Claude CLI** (`claude`) via Homebrew cask on macOS when possible, otherwise npm
-- **Kiro CLI** (`kiro`) via official install script
+- **Claude CLI** (`claude`) using the official npm package first (`@anthropic-ai/claude-code`), with native installer fallback
+- **Kiro CLI** (`kiro-cli`) using official installer on macOS and fallback distros, and `.deb` install path on Ubuntu/Debian
 
 Convenience aliases:
 - `cc` → `claude`
-- `ki` → `kiro`
+- `ki` → `kiro-cli`
 
 ### Other ideas to level this up
 - Add `atuin` for shell history sync/search across machines.

@@ -139,28 +139,46 @@ install_claude_cli() {
     return
   fi
 
-  if [[ "$(uname -s)" == "Darwin" ]] && command -v brew >/dev/null 2>&1; then
-    log "Installing Claude Code CLI via Homebrew cask"
-    brew install --cask claude-code || true
-  fi
-
-  if ! command -v claude >/dev/null 2>&1; then
-    if command -v npm >/dev/null 2>&1; then
-      log "Installing Claude Code CLI via npm"
-      npm install -g @anthropic-ai/claude-code
-    else
-      log "npm not found; skipped Claude Code CLI install."
-    fi
-  fi
-}
-
-install_kiro_cli() {
-  if command -v kiro >/dev/null 2>&1 || command -v kiro-cli >/dev/null 2>&1; then
+  # Anthropic docs list npm as the primary install path.
+  if command -v npm >/dev/null 2>&1; then
+    log "Installing Claude Code CLI via npm"
+    npm install -g @anthropic-ai/claude-code
     return
   fi
 
-  log "Installing Kiro CLI"
-  curl -fsSL https://cli.kiro.dev/install | bash
+  # Fallback: native installer (currently beta in official docs).
+  log "npm not found; using Claude native installer fallback"
+  curl -fsSL https://claude.ai/install.sh | bash
+}
+
+install_kiro_cli() {
+  if command -v kiro-cli >/dev/null 2>&1; then
+    return
+  fi
+
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    log "Installing Kiro CLI for macOS"
+    curl -fsSL https://cli.kiro.dev/install | bash
+    return
+  fi
+
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    local distro
+    distro="$(linux_distro)"
+
+    if [[ "$distro" == "ubuntu" || "$distro" == "debian" ]]; then
+      log "Installing Kiro CLI .deb package for ${distro}"
+      local deb_path
+      deb_path="$(mktemp /tmp/kiro-cli.XXXXXX.deb)"
+      curl --proto '=https' --tlsv1.2 -sSf         'https://desktop-release.q.us-east-1.amazonaws.com/latest/kiro-cli.deb'         -o "$deb_path"
+      sudo dpkg -i "$deb_path" || sudo apt-get install -f -y
+      rm -f "$deb_path"
+      return
+    fi
+
+    log "Installing Kiro CLI via generic installer"
+    curl -fsSL https://cli.kiro.dev/install | bash
+  fi
 }
 
 symlink_files() {

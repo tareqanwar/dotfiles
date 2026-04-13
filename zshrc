@@ -193,7 +193,7 @@ alias pnx='pnpm dlx'
 
 # AI coding CLIs
 alias cc='claude'
-alias ki='kiro'
+alias ki='kiro-cli'
 
 # One-command upgrader for the common runtime managers
 upgrade-dev-runtimes() {
