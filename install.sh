@@ -28,6 +28,9 @@ install_packages_ubuntu_like() {
   sudo apt install -y \
     curl git zsh ca-certificates fzf ripgrep fd-find unzip zip \
     build-essential software-properties-common
+
+  # git-delta is required by gitconfig pager settings.
+  sudo apt install -y git-delta || log "git-delta not found in apt repos; configure delta manually if needed."
 }
 
 install_packages_linux() {
@@ -46,9 +49,11 @@ install_packages_linux() {
   elif command -v dnf >/dev/null 2>&1; then
     log "Using dnf"
     sudo dnf install -y curl git zsh fzf ripgrep fd-find unzip zip
+    sudo dnf install -y git-delta || log "git-delta package unavailable in dnf repos."
   elif command -v pacman >/dev/null 2>&1; then
     log "Using pacman"
     sudo pacman -Sy --noconfirm curl git zsh fzf ripgrep fd unzip zip
+    sudo pacman -Sy --noconfirm git-delta || log "git-delta package unavailable in pacman repos."
   else
     log "No supported package manager found; install dependencies manually."
   fi

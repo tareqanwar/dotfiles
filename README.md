@@ -72,6 +72,7 @@ Quick usage:
 
 The installer also:
 - installs Oh My Zsh + syntax/autosuggestion plugins
+- installs git-delta on macOS/Linux package managers when available
 - installs nvm, sdkman, pyenv (Linux), pnpm, and localtunnel
 - symlinks `.zshrc`, `.bashrc`, and `.gitconfig`
 - attempts to set zsh as default shell

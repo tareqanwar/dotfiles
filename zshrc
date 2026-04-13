@@ -5,8 +5,13 @@ export EDITOR="${EDITOR:-nvim}"
 export VISUAL="$EDITOR"
 export PAGER="less -FRX"
 export LESS="-R"
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+if [[ -z "${LANG:-}" ]]; then
+  if locale -a 2>/dev/null | grep -qi '^en_US\.utf-8$'; then
+    export LANG="en_US.UTF-8"
+  elif locale -a 2>/dev/null | grep -qi '^C\.UTF-8$'; then
+    export LANG="C.UTF-8"
+  fi
+fi
 
 # Add common user bins once
 typeset -U path PATH
