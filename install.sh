@@ -184,6 +184,20 @@ install_kiro_cli() {
   fi
 }
 
+
+install_local_tunnel() {
+  if command -v lt >/dev/null 2>&1; then
+    return
+  fi
+
+  if command -v npm >/dev/null 2>&1; then
+    log "Installing localtunnel (open-source/free local tunnel CLI)"
+    npm install -g localtunnel
+  else
+    log "npm not found; skipped localtunnel install. Install Node.js first."
+  fi
+}
+
 symlink_files() {
   ln -sfn "$DOTFILES_DIR/zshrc" "$HOME/.zshrc"
   ln -sfn "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
@@ -270,6 +284,7 @@ main() {
 
     setup_node_toolchain
     install_pnpm
+    install_local_tunnel
   fi
 
   if [[ "$SKIP_AI" == "false" ]]; then

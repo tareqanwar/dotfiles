@@ -179,6 +179,21 @@ fcd() {
 # Show ports currently in LISTEN state.
 alias ports='lsof -nP -iTCP -sTCP:LISTEN'
 
+
+# Local tunneling helper (localtunnel)
+tunnel() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: tunnel <port> [subdomain]"
+    return 1
+  fi
+
+  if [[ -n "$2" ]]; then
+    lt --port "$1" --subdomain "$2"
+  else
+    lt --port "$1"
+  fi
+}
+
 # ---------- Runtime version managers ----------
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"

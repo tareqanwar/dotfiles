@@ -21,7 +21,7 @@ chmod +x install.sh
 - fast zsh startup with practical defaults
 - git-aware prompt with branch, ahead/behind, and dirty flags
 - quality completion/keybindings and optional tooling hooks (`fzf`, `zoxide`, `direnv`)
-- extra QoL helpers: `croot` (jump to repo root), `fcd` (fuzzy cd), `ports` (list listening ports)
+- extra QoL helpers: `croot` (jump to repo root), `fcd` (fuzzy cd), `ports` (list listening ports), `tunnel` (share localhost quickly)
 
 ### Git workflow
 - clean defaults for modern branching (`main`, rebase pull, prune fetch)
@@ -57,6 +57,14 @@ Convenience aliases:
 - Add `mise` if you want one manager for node/python/java/tool versions.
 - Add `aider` for repo-aware AI pair programming from terminal.
 
+
+### Local tunneling (open-source + free)
+This setup installs **localtunnel** (`lt`) globally via npm when runtimes are enabled.
+
+Quick usage:
+- `tunnel 3000` → exposes localhost:3000
+- `tunnel 3000 my-dev-app` → requests a custom subdomain
+
 ## Installer behavior
 - **macOS:** uses Homebrew packages.
 - **WSL / Ubuntu / Debian family:** uses `apt` and Ubuntu-style dependencies.
@@ -64,7 +72,7 @@ Convenience aliases:
 
 The installer also:
 - installs Oh My Zsh + syntax/autosuggestion plugins
-- installs nvm, sdkman, pyenv (Linux), and pnpm
+- installs nvm, sdkman, pyenv (Linux), pnpm, and localtunnel
 - symlinks `.zshrc`, `.bashrc`, and `.gitconfig`
 - attempts to set zsh as default shell
 
